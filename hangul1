@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>한글 창제의 원리 - 중학생 수업용(오프라인)</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#111b2f;
+      --muted:#9fb0d0;
+      --text:#eef3ff;
+      --line:#243556;
+      --accent:#7aa7ff;
+      --good:#5ee3a1;
+      --bad:#ff7a7a;
+      --warn:#ffd36e;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", Arial, sans-serif;
+      background: radial-gradient(1200px 800px at 20% 0%, #1a2b55 0%, var(--bg) 60%);
+      color:var(--text);
+      line-height:1.55;
+    }
+    a{color:var(--accent)}
+    header{
+      padding:28px 18px 10px;
+      max-width:1100px;
+      margin:0 auto;
+    }
+    .badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:6px 10px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      border-radius:999px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    h1{
+      margin:14px 0 8px;
+      font-size: clamp(22px, 3vw, 34px);
+      letter-spacing:-.02em;
+    }
+    .subtitle{
+      color:var(--muted);
+      max-width:80ch;
+      margin:0 0 16px;
+    }
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding: 0 18px 70px;
+      display:grid;
+      gap:16px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:16px;
+    }
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr}
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:16px;
+    }
+    .card h2{
+      margin:0 0 10px;
+      font-size:18px;
+    }
+    .card h3{
+      margin:14px 0 8px;
+      font-size:16px;
+      color:#d9e5ff;
+    }
+    .muted{color:var(--muted)}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    button{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      transition: transform .05s ease, background .2s ease, border-color .2s ease;
+      font-weight:600;
+    }
+    button:hover{background: rgba(255,255,255,.10); border-color:#36507c}
+    button:active{transform: translateY(1px)}
+    button.primary{
+      background: linear-gradient(180deg, rgba(122,167,255,.45), rgba(122,167,255,.18));
+      border-color: rgba(122,167,255,.7);
+    }
+    button.ghost{
+      background: transparent;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.15);
+      color:var(--muted);
+      font-size:13px;
+    }
+    .big{
+      font-size: clamp(26px, 5vw, 44px);
+      font-weight:800;
+      letter-spacing:-.03em;
+    }
+    .k{
+      font-size: 30px;
+      font-weight:800;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.22);
+      border:1px solid var(--line);
+      min-width:60px;
+      text-align:center;
+    }
+    .panel{
+      display:grid;
+      gap:10px;
+      margin-top:8px;
+    }
+    .note{
+      padding:12px;
+      background: rgba(0,0,0,.18);
+      border:1px dashed rgba(159,176,208,.35);
+      border-radius:14px;
+      color:var(--muted);
+    }
+    .ok{color:var(--good); font-weight:800}
+    .no{color:var(--bad); font-weight:800}
+    .warn{color:var(--warn); font-weight:800}
+    .mini{
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .divider{
+      height:1px; background: var(--line);
+      margin:14px 0;
+    }
+    select, input[type="text"]{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      padding:10px 10px;
+      border-radius: 12px;
+      outline:none;
+      min-width: 120px;
+    }
+    .two{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width: 700px){
+      .two{grid-template-columns:1fr}
+    }
+
+    /* Simple “mouth map” */
+    .mouth{
+      position:relative;
+      height:220px;
+      border-radius: 16px;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(120px 80px at 50% 45%, rgba(255,255,255,.08), transparent 60%),
+        radial-gradient(180px 120px at 50% 70%, rgba(0,0,0,.25), transparent 70%),
+        rgba(0,0,0,.18);
+      overflow:hidden;
+    }
+    .zone{
+      position:absolute;
+      border:1px solid rgba(159,176,208,.25);
+      background: rgba(122,167,255,.06);
+      border-radius: 14px;
+      padding:10px;
+      color: var(--muted);
+      font-size: 13px;
+      transition: background .2s ease, border-color .2s ease;
+    }
+    .zone strong{color:#e8f0ff}
+    .zone.active{
+      background: rgba(94,227,161,.14);
+      border-color: rgba(94,227,161,.55);
+      color:#dffbf0;
+    }
+    .z1{left:14px; top:22px; width:38%; height:42%}
+    .z2{right:14px; top:22px; width:38%; height:42%}
+    .z3{left:14px; bottom:14px; width:40%; height:40%}
+    .z4{right:14px; bottom:14px; width:40%; height:40%}
+
+    .quiz-q{
+      padding:12px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      border-radius: 14px;
+      margin: 10px 0;
+    }
+    .quiz-q h4{margin:0 0 8px; font-size:15px}
+    .choices{display:grid; gap:8px}
+    label.choice{
+      display:flex; gap:10px; align-items:flex-start;
+      padding:10px;
+      border:1px solid rgba(159,176,208,.22);
+      border-radius: 12px;
+      cursor:pointer;
+      background: rgba(255,255,255,.03);
+    }
+    label.choice:hover{border-color:#3a578a}
+    .result{
+      margin-top:10px;
+      padding:12px;
+      border-radius: 14px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+    }
+    .copy{
+      font-size:13px;
+      padding:8px 10px;
+      border-radius: 12px;
+    }
+    .footer{
+      max-width:1100px;
+      margin:0 auto;
+      padding: 0 18px 24px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <span class="badge">오프라인 실행 가능 · 한 파일(HTML) · 중학생 수업용</span>
+  <h1>한글 창제의 원리 탐구(훈민정음)</h1>
+  <p class="subtitle">
+    이 페이지는 <b>자음(발음기관 본뜸)</b>, <b>모음(천·지·인 결합)</b>, <b>합자(음절 블록)</b> 원리를
+    학생이 직접 눌러보고 조합하면서 이해하도록 만든 수업용 자료입니다.
+  </p>
+</header>
+
+<main class="wrap">
+
+  <section class="grid">
+
+    <!-- Left: exploration -->
+    <div class="card">
+      <h2>1) 자음 탐구: 발음기관과 연결하기</h2>
+      <p class="muted">
+        기본 자음(ㄱ ㄴ ㅁ ㅅ ㅇ)은 <b>소리가 만들어지는 자리/모양</b>을 본떠 만들었다고 설명합니다.
+        아래 버튼을 눌러 어디와 관련이 있는지 확인해보세요.
+      </p>
+
+      <div class="two">
+        <div>
+          <div class="row" aria-label="basic consonants">
+            <button class="primary" data-cons="ㄱ">ㄱ</button>
+            <button class="primary" data-cons="ㄴ">ㄴ</button>
+            <button class="primary" data-cons="ㅁ">ㅁ</button>
+            <button class="primary" data-cons="ㅅ">ㅅ</button>
+            <button class="primary" data-cons="ㅇ">ㅇ</button>
+          </div>
+
+          <div class="panel">
+            <div class="row">
+              <span class="pill">선택한 자음</span>
+              <span id="pickedCons" class="k">-</span>
+            </div>
+            <div id="consExplain" class="note">
+              버튼을 눌러 자음을 선택하세요.
+            </div>
+
+            <div class="divider"></div>
+
+            <h3>가획(획 추가)로 확장</h3>
+            <p class="muted mini">
+              같은 계열의 소리는 <b>획을 더해서</b> 만들기도 합니다. 예: ㄱ→ㅋ, ㄷ→ㅌ, ㅂ→ㅍ, ㅈ→ㅊ
+            </p>
+
+            <div class="row">
+              <select id="baseForStroke" aria-label="base consonant">
+                <option value="ㄱ">ㄱ</option>
+                <option value="ㄷ">ㄷ</option>
+                <option value="ㅂ">ㅂ</option>
+                <option value="ㅈ">ㅈ</option>
+              </select>
+              <button id="addStrokeBtn">획 추가 보기</button>
+              <span id="strokeResult" class="pill">결과: -</span>
+            </div>
+            <div class="note mini">
+              포인트: “기본자 + 규칙(획 추가)”로 체계적으로 확장할 수 있다는 점이 한글의 큰 특징입니다.
+            </div>
+
+          </div>
+        </div>
+
+        <div>
+          <div class="mouth" aria-label="mouth diagram">
+            <div id="zoneTongueBack" class="zone z1"><strong>혀 뒷부분/입 안쪽</strong><br/>예: ㄱ 계열</div>
+            <div id="zoneTongueFront" class="zone z2"><strong>혀 앞부분</strong><br/>예: ㄴ 계열</div>
+            <div id="zoneLips" class="zone z3"><strong>입술</strong><br/>예: ㅁ 계열</div>
+            <div id="zoneTeeth" class="zone z4"><strong>이/잇몸 근처</strong><br/>예: ㅅ 계열</div>
+          </div>
+          <p class="mini muted" style="margin:10px 0 0;">
+            ※ 이 그림은 실제 해부학 그림이 아니라, <b>‘어디에서 소리가 만들어지는지’</b>를 쉽게 이해하기 위한 수업용 단순화 그림입니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: quick summary -->
+    <aside class="card">
+      <h2>수업 미션</h2>
+      <ol class="muted">
+        <li>자음 5개 중 3개를 눌러 설명을 읽기</li>
+        <li>가획 예시 2개 확인하기</li>
+        <li>모음 조합으로 ㅏ, ㅗ, ㅘ를 만들어보기</li>
+        <li>음절 생성기로 “각, 고, 관” 만들기</li>
+        <li>퀴즈 6문항 풀고 점수 캡처</li>
+      </ol>
+      <div class="divider"></div>
+      <p class="muted">
+        오늘의 한 줄(제출용):<br/>
+        <b>“한글이 과학적인 이유는 (규칙적으로 확장 가능 / 소리와 글자 모양 연결 / 음절 조합 규칙) 때문이다.”</b>
+      </p>
+    </aside>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h2>2) 모음 탐구: 천·지·인(· ㅡ ㅣ)로 조합하기</h2>
+      <p class="muted">
+        모음은 <b>하늘(·), 땅(ㅡ), 사람(ㅣ)</b>의 기본 요소를 조합해 만든다고 설명합니다.
+        아래에서 직접 조합해보세요.
+      </p>
+
+      <div class="two">
+        <div>
+          <h3>모음 만들기(클릭)</h3>
+          <div class="row">
+            <button class="primary" data-vowel-piece="dot">· (하늘)</button>
+            <button class="primary" data-vowel-piece="bar">ㅡ (땅)</button>
+            <button class="primary" data-vowel-piece="line">ㅣ (사람)</button>
+            <button class="ghost" id="resetVowel">초기화</button>
+          </div>
+
+          <div class="panel">
+            <div class="row">
+              <span class="pill">현재 조합</span>
+              <span id="vowelRecipe" class="pill">-</span>
+            </div>
+            <div class="row">
+              <span class="pill">만들어진 모음</span>
+              <span id="madeVowel" class="k">-</span>
+            </div>
+            <div id="vowelHint" class="note">
+              버튼을 눌러 조합해보세요. (예: ㅣ + · → ㅏ / ㅡ + · → ㅗ 또는 ㅜ)
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3>빠른 예시</h3>
+          <div class="note">
+            <b>기본 아이디어</b><br/>
+            · ㅡ ㅣ 를 바탕으로 점(·)의 위치와 결합으로 모음을 확장합니다.<br/><br/>
+            <b>수업용 간단 예시</b><br/>
+            ㅣ + · → <b>ㅏ</b> (점이 오른쪽)<br/>
+            ㅡ + · → <b>ㅗ</b> (점이 위쪽) / <b>ㅜ</b> (점이 아래쪽)<br/>
+            ㅗ + ㅏ → <b>ㅘ</b> (모음 결합)<br/>
+          </div>
+          <p class="mini muted" style="margin:10px 0 0;">
+            ※ 심화(양/음) 개념은 여기서는 생략하고, “3요소 결합”과 “모음 결합”만 익히도록 구성했습니다.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>3) 합자: 음절 블록 만들기</h2>
+      <p class="muted">
+        한글은 낱자를 줄줄이 쓰기보다, <b>초성+중성(+종성)</b>을 한 덩어리(음절)로 모아 씁니다.
+      </p>
+
+      <div class="panel">
+        <div class="row">
+          <label class="pill">초성
+            <select id="selInitial">
+              <option>ㄱ</option><option>ㄴ</option><option>ㄷ</option><option>ㅁ</option><option>ㅂ</option>
+              <option>ㅅ</option><option>ㅇ</option><option>ㅈ</option><option>ㅊ</option><option>ㅎ</option>
+            </select>
+          </label>
+
+          <label class="pill">중성
+            <select id="selMedial">
+              <option>ㅏ</option><option>ㅓ</option><option>ㅗ</option><option>ㅜ</option><option>ㅡ</option><option>ㅣ</option>
+              <option>ㅘ</option><option>ㅝ</option><option>ㅐ</option><option>ㅔ</option>
+            </select>
+          </label>
+
+          <label class="pill">종성(받침)
+            <select id="selFinal">
+              <option value="">(없음)</option>
+              <option>ㄱ</option><option>ㄴ</option><option>ㄷ</option><option>ㅁ</option><option>ㅂ</option>
+              <option>ㅅ</option><option>ㅇ</option><option>ㅈ</option><option>ㅊ</option><option>ㅎ</option>
+            </select>
+          </label>
+
+          <button id="makeSyllable" class="primary">음절 만들기</button>
+        </div>
+
+        <div class="row" style="margin-top:6px;">
+          <span class="pill">결과</span>
+          <span id="syllableOut" class="big">-</span>
+        </div>
+
+        <div class="note mini">
+          팁: 예를 들어 “관”은 ㄱ + ㅘ + ㄴ 입니다. (먼저 ㅗ+ㅏ=ㅘ를 만들었다고 생각해도 좋아요!)
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>4) 형성평가 퀴즈(6문항)</h2>
+    <p class="muted">모두 풀고 “채점하기”를 누르면 점수가 나옵니다.</p>
+
+    <div id="quiz"></div>
+
+    <div class="row" style="margin-top:12px;">
+      <button id="gradeBtn" class="primary">채점하기</button>
+      <button id="resetQuizBtn" class="ghost">다시 풀기</button>
+      <span id="scorePill" class="pill">점수: -</span>
+    </div>
+
+    <div id="scoreBox" class="result" style="display:none;"></div>
+
+    <div class="divider"></div>
+
+    <h3>오늘의 한 줄(제출용)</h3>
+    <p class="muted mini">아래에 한 줄을 쓰고 “복사” 버튼으로 복사해 제출하세요.</p>
+    <div class="row">
+      <input id="oneLine" type="text" style="flex:1; min-width:220px"
+             placeholder="예: 한글이 과학적인 이유는 규칙적으로 글자를 확장하고 조합할 수 있기 때문이다." />
+      <button id="copyBtn" class="copy">복사</button>
+      <span id="copyState" class="mini muted"></span>
+    </div>
+  </section>
+
+</main>
+
+<div class="footer">
+  <div>© 수업용 자료(오프라인) · 교실/가정 학습에 자유롭게 사용 가능</div>
+  <div>주의: 본 자료는 “원리를 이해하기 위한 단순화”가 포함되어 있습니다.</div>
+</div>
+
+<script>
+  // ---------- Consonant explorer ----------
+  const consInfo = {
+    "ㄱ": {
+      zone: "zoneTongueBack",
+      text: "ㄱ은 혀의 <b>뒷부분</b>이 입천장 쪽에 닿는 소리(입 안쪽)와 관련된 기본자라고 설명합니다."
+    },
+    "ㄴ": {
+      zone: "zoneTongueFront",
+      text: "ㄴ은 혀의 <b>앞부분</b>이 윗잇몸 쪽에 닿는 소리와 관련된 기본자라고 설명합니다."
+    },
+    "ㅁ": {
+      zone: "zoneLips",
+      text: "ㅁ은 <b>입술</b>을 다물어 내는 소리와 관련된 기본자라고 설명합니다."
+    },
+    "ㅅ": {
+      zone: "zoneTeeth",
+      text: "ㅅ은 <b>이/잇몸</b> 근처에서 공기가 스치며 나는 소리와 관련된 기본자라고 설명합니다."
+    },
+    "ㅇ": {
+      zone: null,
+      text: "ㅇ은 목구멍 쪽의 소리(또는 ‘소리의 자리’)를 나타내는 기본자라고 설명합니다. (초성에서는 소리 없음)"
+    }
+  };
+
+  const consButtons = document.querySelectorAll('button[data-cons]');
+  const pickedCons = document.getElementById('pickedCons');
+  const consExplain = document.getElementById('consExplain');
+
+  const zones = [
+    "zoneTongueBack","zoneTongueFront","zoneLips","zoneTeeth"
+  ].map(id => document.getElementById(id));
+
+  function clearZones(){
+    zones.forEach(z => z.classList.remove('active'));
+  }
+
+  consButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const c = btn.dataset.cons;
+      pickedCons.textContent = c;
+      consExplain.innerHTML = consInfo[c].text;
+
+      clearZones();
+      if(consInfo[c].zone){
+        document.getElementById(consInfo[c].zone).classList.add('active');
+      }
+    });
+  });
+
+  // Stroke add
+  const strokeMap = {"ㄱ":"ㅋ","ㄷ":"ㅌ","ㅂ":"ㅍ","ㅈ":"ㅊ"};
+  const selBase = document.getElementById('baseForStroke');
+  const addStrokeBtn = document.getElementById('addStrokeBtn');
+  const strokeResult = document.getElementById('strokeResult');
+
+  addStrokeBtn.addEventListener('click', () => {
+    const base = selBase.value;
+    const res = strokeMap[base] || "-";
+    strokeResult.textContent = `결과: ${base} → ${res}`;
+  });
+
+  // ---------- Vowel builder (simple learning model) ----------
+  const recipe = new Set();
+  const vowelRecipe = document.getElementById('vowelRecipe');
+  const madeVowel = document.getElementById('madeVowel');
+  const vowelHint = document.getElementById('vowelHint');
+
+  function updateVowelUI(){
+    const arr = Array.from(recipe);
+    vowelRecipe.textContent = arr.length ? arr.join(" + ") : "-";
+
+    // A simple "classroom model" mapping:
+    // line + dot => ㅏ
+    // bar + dot => ㅗ (default)
+    // bar + line => ㅢ (optional, not used)
+    // bar => ㅡ , line => ㅣ , dot => ·
+    // dot + bar + line => show "조합" only
+    let out = "-";
+    let hint = "조합을 더 만들어보세요.";
+
+    const hasDot = recipe.has("·");
+    const hasBar = recipe.has("ㅡ");
+    const hasLine = recipe.has("ㅣ");
+
+    if(recipe.size === 1){
+      if(hasDot){ out = "·"; hint="기본 요소(하늘)"; }
+      if(hasBar){ out = "ㅡ"; hint="기본 요소(땅)"; }
+      if(hasLine){ out = "ㅣ"; hint="기본 요소(사람)"; }
+    }
+
+    // Simplified teaching rules
+    if(hasLine && hasDot && recipe.size === 2){
+      out = "ㅏ";
+      hint = "ㅣ + · → ㅏ (점이 오른쪽에 있다고 생각하면 쉬워요)";
+    } else if(hasBar && hasDot && recipe.size === 2){
+      out = "ㅗ";
+      hint = "ㅡ + · → ㅗ 또는 ㅜ (점의 위치에 따라 달라짐). 여기서는 ㅗ로 표시!";
+    } else if(recipe.size === 2 && hasBar && hasLine){
+      out = "ㅢ";
+      hint = "ㅡ + ㅣ → ㅢ (심화 예시)";
+    } else if(recipe.size >= 3 && hasBar && hasLine && hasDot){
+      out = "조합";
+      hint = "좋아요! 기본 요소를 여러 개 결합할 수 있어요. 이제 ‘모음 결합(ㅗ+ㅏ=ㅘ)’도 해봅시다.";
+    }
+
+    madeVowel.textContent = out;
+    vowelHint.innerHTML = hint;
+  }
+
+  document.querySelectorAll('button[data-vowel-piece]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const v = btn.dataset.vowelPiece;
+      if(v === "dot") recipe.add("·");
+      if(v === "bar") recipe.add("ㅡ");
+      if(v === "line") recipe.add("ㅣ");
+      updateVowelUI();
+    });
+  });
+
+  document.getElementById('resetVowel').addEventListener('click', () => {
+    recipe.clear();
+    updateVowelUI();
+  });
+
+  // ---------- Syllable maker (Hangul composition) ----------
+  const L = ["ㄱ","ㄲ","ㄴ","ㄷ","ㄸ","ㄹ","ㅁ","ㅂ","ㅃ","ㅅ","ㅆ","ㅇ","ㅈ","ㅉ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+  const V = ["ㅏ","ㅐ","ㅑ","ㅒ","ㅓ","ㅔ","ㅕ","ㅖ","ㅗ","ㅘ","ㅙ","ㅚ","ㅛ","ㅜ","ㅝ","ㅞ","ㅟ","ㅠ","ㅡ","ㅢ","ㅣ"];
+  const T = ["", "ㄱ","ㄲ","ㄳ","ㄴ","ㄵ","ㄶ","ㄷ","ㄹ","ㄺ","ㄻ","ㄼ","ㄽ","ㄾ","ㄿ","ㅀ","ㅁ","ㅂ","ㅄ","ㅅ","ㅆ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ"];
+
+  const selInitial = document.getElementById('selInitial');
+  const selMedial = document.getElementById('selMedial');
+  const selFinal = document.getElementById('selFinal');
+  const syllableOut = document.getElementById('syllableOut');
+
+  // map medial dropdown values to actual V index (keep it simple, only a subset)
+  const medialMap = {
+    "ㅏ":"ㅏ","ㅓ":"ㅓ","ㅗ":"ㅗ","ㅜ":"ㅜ","ㅡ":"ㅡ","ㅣ":"ㅣ",
+    "ㅘ":"ㅘ","ㅝ":"ㅝ","ㅐ":"ㅐ","ㅔ":"ㅔ"
+  };
+
+  function makeHangulSyllable(initial, medial, finalJamo){
+    const li = L.indexOf(initial);
+    const vi = V.indexOf(medial);
+    const ti = T.indexOf(finalJamo);
+    if(li < 0 || vi < 0 || ti < 0) return null;
+    const code = 0xAC00 + (li * 21 + vi) * 28 + ti;
+    return String.fromCharCode(code);
+  }
+
+  document.getElementById('makeSyllable').addEventListener('click', () => {
+    const i = selInitial.value;
+    const m = medialMap[selMedial.value] || selMedial.value;
+    const f = selFinal.value || "";
+    const s = makeHangulSyllable(i, m, f);
+
+    syllableOut.textContent = s ? s : "만들 수 없음";
+  });
+
+  // ---------- Quiz ----------
+  const quizData = [
+    {
+      q: "1. 기본 자음 ㄱ은 주로 무엇을 본떠 만들었다고 설명할까?",
+      a: "혀 뒷부분이 닿는 자리(입 안쪽)",
+      choices: ["입술 모양", "혀 뒷부분이 닿는 자리(입 안쪽)", "이/잇몸 모양", "손가락 모양"]
+    },
+    {
+      q: "2. ‘가획’의 뜻으로 가장 알맞은 것은?",
+      a: "획을 더해 같은 계열의 소리를 확장하는 것",
+      choices: ["글자를 거꾸로 쓰는 것", "획을 더해 같은 계열의 소리를 확장하는 것", "뜻을 바꾸기 위해 점을 지우는 것", "외국어를 한글로 옮기는 것"]
+    },
+    {
+      q: "3. 다음 중 ‘천·지·인’의 기본 요소에 해당하는 것은?",
+      a: "·, ㅡ, ㅣ",
+      choices: ["ㅁ, ㅅ, ㅇ", "·, ㅡ, ㅣ", "가, 나, 다", "ㅏ, ㅓ, ㅗ"]
+    },
+    {
+      q: "4. 모음 결합 예시로 맞는 것은?",
+      a: "ㅗ + ㅏ = ㅘ",
+      choices: ["ㅣ + ㅁ = ㅏ", "ㅗ + ㅏ = ㅘ", "ㄱ + ㅅ = ㅗ", "ㅂ + ㅡ = ㅣ"]
+    },
+    {
+      q: "5. 한글은 글자를 보통 어떤 단위로 모아 쓰는가?",
+      a: "음절(초성+중성(+종성))",
+      choices: ["알파벳처럼 한 줄로만", "뜻 단위(단어)로만", "음절(초성+중성(+종성))", "문장 단위로만"]
+    },
+    {
+      q: "6. 한글이 ‘과학적’이라고 불리는 이유로 가장 적절한 것은?",
+      a: "규칙으로 확장·조합이 가능하고 소리와 모양의 연결이 있기 때문",
+      choices: ["글자가 무조건 예쁘기 때문", "외우기만 하면 되기 때문", "규칙으로 확장·조합이 가능하고 소리와 모양의 연결이 있기 때문", "한 번에 모두 배우기 어렵기 때문"]
+    }
+  ];
+
+  const quizEl = document.getElementById('quiz');
+  function renderQuiz(){
+    quizEl.innerHTML = "";
+    quizData.forEach((item, idx) => {
+      const box = document.createElement('div');
+      box.className = "quiz-q";
+      box.innerHTML = `<h4>${item.q}</h4>`;
+      const choices = document.createElement('div');
+      choices.className = "choices";
+
+      item.choices.forEach((c, j) => {
+        const id = `q${idx}_c${j}`;
+        const label = document.createElement('label');
+        label.className = "choice";
+        label.setAttribute("for", id);
+        label.innerHTML = `
+          <input type="radio" name="q${idx}" id="${id}" value="${c}" />
+          <span>${c}</span>
+        `;
+        choices.appendChild(label);
+      });
+
+      box.appendChild(choices);
+      quizEl.appendChild(box);
+    });
+  }
+  renderQuiz();
+
+  const scorePill = document.getElementById('scorePill');
+  const scoreBox = document.getElementById('scoreBox');
+
+  document.getElementById('gradeBtn').addEventListener('click', () => {
+    let correct = 0;
+    const details = [];
+
+    quizData.forEach((item, idx) => {
+      const picked = document.querySelector(`input[name="q${idx}"]:checked`);
+      const val = picked ? picked.value : null;
+      const ok = (val === item.a);
+      if(ok) correct++;
+      details.push({
+        n: idx+1,
+        ok,
+        picked: val ?? "(선택 안 함)",
+        answer: item.a
+      });
+    });
+
+    const score = Math.round((correct / quizData.length) * 100);
+    scorePill.textContent = `점수: ${score}점 (${correct}/${quizData.length})`;
+
+    scoreBox.style.display = "block";
+    scoreBox.innerHTML = `
+      <div style="font-weight:800; margin-bottom:6px;">채점 결과: <span class="${score>=80?'ok':(score>=60?'warn':'no')}">${score}점</span></div>
+      <div class="muted mini">틀린 문항은 정답을 확인하고 다시 도전해보세요.</div>
+      <div class="divider"></div>
+      ${details.map(d => `
+        <div class="mini" style="margin:8px 0;">
+          <b>${d.n}번</b> : ${d.ok ? '<span class="ok">정답</span>' : '<span class="no">오답</span>'}<br/>
+          <span class="muted">내 선택:</span> ${d.picked}<br/>
+          <span class="muted">정답:</span> ${d.answer}
+        </div>
+      `).join("")}
+    `;
+  });
+
+  document.getElementById('resetQuizBtn').addEventListener('click', () => {
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    scorePill.textContent = "점수: -";
+    scoreBox.style.display = "none";
+    scoreBox.innerHTML = "";
+  });
+
+  // ---------- One-line copy ----------
+  document.getElementById('copyBtn').addEventListener('click', async () => {
+    const txt = document.getElementById('oneLine').value.trim();
+    const state = document.getElementById('copyState');
+    if(!txt){
+      state.textContent = "먼저 한 줄을 입력하세요.";
+      return;
+    }
+    try{
+      await navigator.clipboard.writeText(txt);
+      state.textContent = "복사 완료! (붙여넣기 Ctrl+V)";
+    }catch(e){
+      state.textContent = "복사가 막혔어요. 텍스트를 드래그해서 Ctrl+C로 복사하세요.";
+    }
+    setTimeout(() => state.textContent = "", 2500);
+  });
+
+  // Init
+  updateVowelUI();
+</script>
+</body>
+</html>
